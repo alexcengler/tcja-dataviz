@@ -15,8 +15,33 @@ glimpse(tcja)
 
 View(tcja[1,])
 
+########## INPUTS ########## 
+## Function to return number of unique elements in a vector:
+len_unq <- function(col){
+  output <- length(unique(col))
+  return(output)
+}
+
+tcja %>%
+  select(contains("RATES")) %>%
+  summarise_all(funs(uniques = len_unq))
+
+## There are four sets of marginal rates being passed in:
+marg_rates <- tcja %>%
+  select(contains("RATES")) %>% 
+  unite(sep="--")
+table(marg_rates)
 
 
+
+
+
+
+
+
+
+
+##########################################
 ## Outcome Variables for After Tax Income: 
 # By INCOME LEVELS: PctChginAftTaxIncPercent_LEVEL_ 2-9
 # BY INCOME PERCENTILES: PctChginAftTaxIncPercent_PCT_ 1-18
@@ -24,13 +49,6 @@ View(tcja[1,])
 
 ## Outcome Variables for Revenue Change:
 # REV_CHG
-
-
-
-
-
-
-
 
 
 ## Outcome variables thoughts:
