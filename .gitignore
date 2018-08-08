@@ -1,3 +1,5 @@
 # Ignore data files
 *.csv
 *.xlsx
+.Rproj.user
+.Rhistory
