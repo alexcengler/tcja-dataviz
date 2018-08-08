@@ -16,11 +16,15 @@ glimpse(tcja)
 View(tcja[1,])
 
 ########## INPUTS ########## 
-## Function to return number of unique elements in a vector:
+## Helper function to return number of unique elements in a vector:
 len_unq <- function(col){
   output <- length(unique(col))
   return(output)
 }
+
+################
+
+
 
 tcja %>%
   select(contains("RATES")) %>%
@@ -28,9 +32,38 @@ tcja %>%
 
 ## There are four sets of marginal rates being passed in:
 marg_rates <- tcja %>%
-  select(contains("RATES")) %>% 
+  select(NBRACK, contains("RATES")) %>% 
+  mutate_all(round, 3) %>%
   unite(sep="--")
+
+## One scenario with 8 tax brackets and three scenarios with 10 tax brackets.
+## QUESTION: Though number of rows differs slightly, why 1726, 1728, 1728, 1728?
 table(marg_rates)
+
+
+
+## Three scenarios with different AMT permutations:
+tcja %>%
+  select(contains("AMTHRSH")) %>%
+  summarise_all(funs(uniques = len_unq))
+
+amt_permutations <- tcja %>%
+  select(contains("AMTHRSH")) %>% 
+  unite(sep="--")
+table(amt_permutations)
+
+
+
+
+## Three standard deduction permutations:
+standard_deduction_permutations <- tcja %>%
+  select(contains("STANDARD")) %>% 
+  unite(sep="--")
+table(standard_deduction_permutations)
+
+
+
+
 
 
 
