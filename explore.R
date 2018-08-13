@@ -1,4 +1,7 @@
 library(tidyverse)
+library(viridis)
+library(scales)
+options(scipen=999999)
 
 ################################
 ## Data Version Note:
@@ -63,10 +66,6 @@ childcredit_permutations <- tcja %>%
 table(childcredit_permutations)
 
 
-
-
-
-
 table(tcja$CHILDREFUND_THRESH)
 
 
@@ -128,6 +127,19 @@ table(standard_deduction_permutations)
 
 ## Outcome variables thoughts:
 ## How do people under 30k do? How do they do relative to people over 100K?
+
+
+
+## Botton Quintile vs Top Decile, Revenue as Color
+ggplot(tcja, aes(x=PctChginAftTaxIncPercent_PCT_2, y=PctChginAftTaxIncPercent_PCT_14, color=REV_CHG)) + 
+  geom_point() +
+  scale_color_viridis(labels=function(x) (x/10^9), breaks=pretty_breaks(n = 5)) + 
+  labs(x="%Chg AftTaxInx - Bottom Quintile",
+       y= "%Chg AftTaxInx - Top Decile",
+       color="Revenue Change \n in Billions USD") +
+  theme_minimal() + 
+  guides(color = guide_colorbar(barheight = unit(8, "cm")))
+
 
 
 
