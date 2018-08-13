@@ -125,15 +125,39 @@ table(standard_deduction_permutations)
 # REV_CHG
 
 
-## Outcome variables thoughts:
-## How do people under 30k do? How do they do relative to people over 100K?
 
 
 
 ## Botton Quintile vs Top Decile, Revenue as Color
 ggplot(tcja, aes(x=PctChginAftTaxIncPercent_PCT_2, y=PctChginAftTaxIncPercent_PCT_14, color=REV_CHG)) + 
-  geom_point() +
+  geom_hline(yintercept = 0, color = "black") + 
+  geom_vline(xintercept = 0, color = "black")+ 
+  geom_point(alpha=0.5) +
+  # scale_x_continuous(limits=c(-3.5,3.5)) +
+  scale_y_continuous(limits=c(-3.5,3.5)) +
   scale_color_viridis(labels=function(x) (x/10^9), breaks=pretty_breaks(n = 5)) + 
+  labs(x="%Chg AftTaxInx - Bottom Quintile",
+       y= "%Chg AftTaxInx - Top Decile",
+       color="Revenue Change \n in Billions USD") +
+  theme_minimal() + 
+  guides(color = guide_colorbar(barheight = unit(8, "cm")))
+
+
+# There is more variation in the after tax income of the top decile than bottom quintile, and so setting limits for the scales matters a lot. 
+
+
+
+
+## Filtering that allows for looking at similar revenue changes across the data points:
+ggplot(data=tcja, mapping=aes(x=PctChginAftTaxIncPercent_PCT_2, y=PctChginAftTaxIncPercent_PCT_14)) + 
+  geom_hline(yintercept = 0, color = "black") + 
+  geom_vline(xintercept = 0, color = "black") + 
+  geom_point(data=filter(tcja, REV_CHG > (1*10^11) & REV_CHG < (2*10^11)), aes(color=REV_CHG), alpha=1) +
+  geom_point(data=filter(tcja, ((REV_CHG < (1*10^11)) | (REV_CHG > (2*10^11)))), alpha=0.1, color="#cccccc") +
+  scale_y_continuous(limits=c(-3.5,3.5)) +
+  scale_color_viridis(limits=range(tcja$REV_CHG),
+                      labels=function(x) (x/10^9), 
+                      breaks=pretty_breaks(n = 5)) + 
   labs(x="%Chg AftTaxInx - Bottom Quintile",
        y= "%Chg AftTaxInx - Top Decile",
        color="Revenue Change \n in Billions USD") +
